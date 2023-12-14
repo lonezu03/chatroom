@@ -11,6 +11,7 @@ const cors = require('cors');
 app.use(cors()); // Sử dụng cors middleware
 app.get('/',(req,res)=>{
     res.sendFile(__dirname + '/index.html');
+    //res.sendFile(__dirname+'/style.css');
 })
 io.on('connection',(socket)=>{
     console.log('user connected' )
