@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Chat</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
@@ -15,7 +15,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     resize: none; /* Ngăn việc thay đổi kích thước */" rows="10" cols="50" readonly></textarea><br>
-    <form id="chat-form" style="">
+    <form id="chat-form" >
     <input type="text" id="messages" style="width: 70%;
     padding: 8px;
     font-size: 16px;
@@ -27,7 +27,11 @@
     color: #fff;
     border: none;
     border-radius: 4px;
-    cursor: pointer;"    onmouseover="this.style.color='#007bff'" onmouseout="this.style.color='#007bff'">Send</button>
+    cursor: pointer;"    >Send</button>
+    <input type="file" id="fileInput">
+    <button onclick="sendFile()">Send File</button>
+    <!-- <a id="downloadLink" download>Download File</a> -->
+    <img id="imageDisplay" style="display: none; max-width: 300px; max-height: 300px;" alt="Image">
 </form>
 
 </body>
@@ -49,11 +53,35 @@
                 message});
             chatmess.value=''
         })
+        function sendFile() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+      const fileData = {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        data: event.target.result // Base64-encoded string of file content
+      };
+
+      socket.emit('file-upload', fileData);
+    };
+
+    reader.readAsDataURL(file);
+  }
         socket.on('user-chat',(message  )=>{
             const chatbox = document.getElementById('chatbox');
             chatbox.value += message.name+':'+message.message + '\n';
             scrollToBottom();
-            })
+            });
+            socket.on('file-available', (fileName) => {
+    // Khi file có sẵn, cập nhật thuộc tính 'src' của thẻ <img> với đường dẫn đến file hình ảnh
+    const imageDisplay = document.getElementById('imageDisplay');
+    imageDisplay.src = `/uploads/${fileName}`; // Đường dẫn để hiển thị file hình ảnh từ server
+    imageDisplay.style.display = 'block'; // Hiển thị ảnh khi có sẵn
+  });
         function displayMessage(message) {
             const chatbox = document.getElementById('chatbox');
             chatbox.value += message + '\n';
