@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat</title>
+</head>
+
+<body>
+    <textarea id="chatbox" rows="10" cols="50" readonly></textarea><br>
+    <form id="chat-form">
+    <input type="text" id="messages" placeholder="Type a message">
+    <button type="submit">Send</button>
+</form>
+
+</body>
+<!-- <script src="/socket.io/socket.io.js"></script>     -->
+<!-- <script src="./node_modules/socket.io/client-dist/socket.io.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+<script>
+    const name =prompt('Tên bạn là gì ?')
+        const socket = io();
+        //const chatbox = document.getElementById('chatbox');
+        const chatform=document.querySelector('#chat-form');
+        const chatmess = document.querySelector('#messages');
+        chatform.addEventListener('submit',(e)=>{
+            e.preventDefault();
+            const message=chatmess.value
+            socket.emit('on-chat',{
+                name,
+                message});
+            chatmess.value=''
+        })
+        socket.on('user-chat',(message  )=>{
+            const chatbox = document.getElementById('chatbox');
+            chatbox.value += message.name+':'+message.message + '\n';
+            })
+        function displayMessage(message) {
+            const chatbox = document.getElementById('chatbox');
+            chatbox.value += message + '\n';
+        }
+    </script>
+</html>
