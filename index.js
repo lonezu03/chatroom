@@ -9,6 +9,7 @@ const server =http.createServer(app)
 const {
     Server
 } =require('socket.io')
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const io=new Server (server)
 const cors = require('cors');
 app.use(cors()); // Sử dụng cors middleware
@@ -33,7 +34,7 @@ io.on('connection',(socket)=>{
     socket.on('on-chat',data=>{
     io.emit('user-chat',data)
     })
- 
+   
       socket.on('file-upload', (fileData) => {
         saveFile(fileData);
     
