@@ -18,7 +18,7 @@ app.get('/',(req,res)=>{
     //res.sendFile(__dirname+'/style.css');
 })
 function saveFile(fileData) {
-    const fileBuffer = Buffer.from(fileData.data, 'base64');
+    const fileBuffer = Buffer.from(fileData.data);
     const filePath = path.join(__dirname, 'uploads', fileData.name);
   
     fs.writeFile(filePath, fileBuffer, (err) => {
