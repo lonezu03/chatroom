@@ -34,10 +34,8 @@ io.on('connection',(socket)=>{
     socket.on('on-chat',data=>{
     io.emit('user-chat',data)
     })
-   
       socket.on('file-upload', (fileData) => {
         saveFile(fileData);
-    
         // Gửi lại file cho tất cả các client khác
         socket.broadcast.emit('file-available', fileData.name);
       });
